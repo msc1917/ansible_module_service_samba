@@ -1,0 +1,58 @@
+---
+- name: Install Samba-package
+  apt:
+    name: [ 'samba' ]
+    state: present
+    update_cache: no
+  become: yes
+
+- name: Create directories
+  file:
+    path: "srv"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: '0755'
+  become: yes
+  when:
+    - samba is defined
+    - samba.directories is defined
+
+- name: Create directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.fileuser | default("root") }}"
+    group: "{{ item.filegroup | default("root") }}"
+    mode: '0777'
+  become: yes
+  with_items:
+    - "{{ samba.directories }}"
+  when:
+    - samba is defined
+    - samba.directories is defined
+
+- name: Link directories to samba-shares
+  file:
+    path: "{{ item[0] }}"
+    src: "{{ item[1] }}"
+    state: link
+    owner: "root"
+    group: "root"
+    mode: '0775'
+  become: yes
+  with_items:
+    - "{{ samba.link_directories }}"
+  when:
+    - samba is defined
+    - samba.link_directories is defined
+
+- name: Add Samba-Group to admin-users
+  user:
+    name: "{{ item.name }}"
+    groups: sambashare
+    append: yes
+  ignore_errors: yes
+  become: yes
+  with_items:
+    - "{{ admin_users }}"

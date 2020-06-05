@@ -1,0 +1,6 @@
+---
+- name: Setup SAMBA
+  include_tasks: setup.yml
+
+- name: Generiere Konfiguration SAMBA
+  include_tasks: generate_config.yml

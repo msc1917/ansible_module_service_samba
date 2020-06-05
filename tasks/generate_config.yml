@@ -1,0 +1,8 @@
+---
+- name: Generiere smb.conf
+  template:
+    src: "smb.conf.j2"
+    dest: "/etc/samba/smb.conf"
+    mode: '0644'
+  become: yes
+  notify: restart samba
