@@ -239,7 +239,7 @@
 ;   write list = root, @lpadmin
 
 {% if samba is defined %}
-{% for directory in samba.directories %}
+{% for directory in samba.sambashares %}
 [{{ directory["name"] }}]
   path = {{ directory["path"] }}
   comment = {{ directory["comment"] }}
