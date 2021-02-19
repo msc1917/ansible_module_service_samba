@@ -1,6 +1,10 @@
 ---
 - name: Setup SAMBA
   include_tasks: setup.yml
+  when:
+    - samba is defined
 
 - name: Generiere Konfiguration SAMBA
   include_tasks: generate_config.yml
+  when:
+    - samba is defined
