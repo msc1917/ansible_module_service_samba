@@ -247,7 +247,7 @@
   force user = {{ directory["fileuser"] }}
 {% endif %}
 {% if directory["filegroup"] is defined %}
-  force user = {{ directory["filegroup"] }}
+  force group = {{ directory["filegroup"] }}
 {% endif %}
 
   available = {{ directory["available"] |  default('yes') }} 
@@ -255,6 +255,9 @@
   guest ok = {{ directory["guest_ok"] |  default('no') }}
   read only = {{ directory["read_only"] |  default('no') }}
   writeable = {{ directory["writeable"] |  default('no') }}
+{% if directory["write_list"] is defined %}
+  write list = {{ directory["write_list"]|join(', ') }}
+{% endif %}
   inherit acls = no
   inherit owner = no
   inherit permissions = yes

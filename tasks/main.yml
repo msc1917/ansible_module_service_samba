@@ -8,3 +8,8 @@
   include_tasks: generate_config.yml
   when:
     - samba is defined
+
+- name: Konfiguriere User in SAMBA
+  include_tasks: setup_users.yml
+  when:
+    - samba is defined

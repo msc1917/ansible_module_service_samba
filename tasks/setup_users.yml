@@ -1,0 +1,5 @@
+---
+- name: Konfiguriere User mit SMBPASSWD
+  include_tasks: setup_users_smbpasswd.yml
+  when:
+    - samba_auth == "smbpasswd"

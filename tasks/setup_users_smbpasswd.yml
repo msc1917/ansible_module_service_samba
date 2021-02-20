@@ -1,0 +1,13 @@
+---
+- name: Configure Samba users.
+  shell: >
+    (pdbedit --user={{ item.smb_user }} 2>&1 > /dev/null)
+    || (echo '{{ item.smb_password }}'; echo '{{ item.smb_password }}')
+    | smbpasswd -s -a {{ item.smb_user }}
+  register: smbpasswd
+  become: yes
+  changed_when: "'Added user' in smbpasswd.stdout"
+  with_items: "{{ admin_users }}"
+  # when: item.smb_user exists
+  # loop_control:
+  #   label: "{{ item.smb_user }}"
