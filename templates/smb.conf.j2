@@ -170,6 +170,7 @@
 
 #======================= Share Definitions =======================
 
+{% if samba.user_homes is defined %}
 [homes]
    comment = Home Directories
    browseable = no
@@ -193,6 +194,8 @@
 # This might need tweaking when using external authentication schemes
    valid users = %S
 
+{% endif %}
+{% if samba.netlogon is defined %}
 # Un-comment the following and create the netlogon directory for Domain Logons
 # (you need to configure Samba to act as a domain controller too.)
 ;[netlogon]
@@ -201,6 +204,8 @@
 ;   guest ok = yes
 ;   read only = yes
 
+{% endif %}
+{% if samba.user_profiles is defined %}
 # Un-comment the following and create the profiles directory to store
 # users profiles (see the "logon path" option above)
 # (you need to configure Samba to act as a domain controller too.)
@@ -214,6 +219,8 @@
 ;   create mask = 0600
 ;   directory mask = 0700
 
+{% endif %}
+{% if samba.printer is defined %}
 [printers]
    comment = All Printers
    browseable = no
@@ -238,6 +245,7 @@
 # to the drivers directory for these users to have write rights in it
 ;   write list = root, @lpadmin
 
+{% endif %}
 {% if samba is defined %}
 {% for directory in samba.sambashares %}
 [{{ directory["name"] }}]
@@ -248,8 +256,8 @@
 {% endif %}
 {% if directory["filegroup"] is defined %}
   force group = {{ directory["filegroup"] }}
-{% endif %}
 
+{% endif %}
   available = {{ directory["available"] |  default('yes') }} 
   browseable = {{ directory["browseable"] |  default('yes') }}
   guest ok = {{ directory["guest_ok"] |  default('no') }}
@@ -258,10 +266,14 @@
 {% if directory["write_list"] is defined %}
   write list = {{ directory["write_list"]|join(', ') }}
 {% endif %}
+{% if directory["read_list"] is defined %}
+  write list = {{ directory["read_list"]|join(', ') }}
+{% endif %}
   inherit acls = no
   inherit owner = no
   inherit permissions = yes
   follow symlinks = yes
   wide links = yes
+  
 {% endfor %}
 {% endif %}
